@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kod weryfikacyjny</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 480px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #code {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pobierz kod weryfikacyjny</h1>
+  <p>Wpisz swój sekret, aby odebrać najnowszy 6-cyfrowy kod weryfikacyjny wysłany na Twoją skrzynkę.</p>
+  <p><small>Dla tego wdrożenia domyślny sekret to <code>sekret2025</code>. Możesz zmienić go w konfiguracji funkcji.</small></p>
+  <label for="secret">Sekret</label>
+  <input type="password" id="secret" placeholder="sekret2025" />
+  <button id="fetch">Pobierz kod</button>
+  <div id="code"></div>
+  <script>
+    document.getElementById('fetch').addEventListener('click', async function () {
+      const secret = document.getElementById('secret').value.trim();
+      const resultEl = document.getElementById('code');
+      resultEl.textContent = '';
+      if (!secret) {
+        alert('Proszę podać sekret');
+        return;
+      }
+      try {
+        const response = await fetch('/.netlify/functions/get-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ secret }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          resultEl.textContent = 'Twój kod: ' + data.code;
+        } else {
+          resultEl.textContent = data.error || 'Wystąpił błąd.';
+        }
+      } catch (err) {
+        resultEl.textContent = 'Błąd: ' + (err.message || 'nieznany');
+      }
+    });
+  </script>
+</body>
+</html>
