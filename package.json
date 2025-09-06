@@ -1,0 +1,8 @@
+{
+  "name": "email-code-extractor",
+  "version": "1.0.0",
+  "description": "Netlify app to extract the latest 6-digit verification code from a Home.pl inbox via IMAP.",
+  "main": "netlify/functions/get-otp.js",
+  "license": "MIT",
+  "dependencies": {}
+}
