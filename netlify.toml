@@ -1,0 +1,13 @@
+# Specify the directory for serverless functions and the publish directory.
+[build]
+  publish = "public"
+
+[functions]
+  # The directory where Netlify will look for serverless functions
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/get-otp"
+  to = "/.netlify/functions/get-otp"
+  status = 200
+  force = true
